@@ -5,4 +5,4 @@ if vim.fn.has('nvim-0.7.0') == 0 then
 end
 
 -- Auto-setup with default options
-require('hello-plugin').setup()
+require('neoranger').setup()
