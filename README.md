@@ -1,42 +1,112 @@
+
 # neoranger.nvim
 
-A dependency-free integration of Ranger into Neovim. 
+Ranger in a floating window.
 
-## Installation
+## What it does
 
-Using nvim package manager:
-```lua
-vim.pack.add({
-  { src = "https://github.com/Stianlyng/neovim-plugin-starter.git" },
-})
+- Opens files in new tabs
+- todo; change working directory
+- No dependencies
 
-require('neoranger').setup()
+## Requirements
 
-```
+- Neovim 0.12 Nightly (only tested there, might work elsewhere idk)
+- Ranger installed 
 
-Using lazy.nvim:
+## Install
+
+**lazy.nvim:**
 ```lua
 {
-  "Stianlyng/neoranger.nvim",
+  "stianlyng/neoranger.nvim",
   config = function()
     require("neoranger").setup()
   end,
 }
 ```
 
-Native manual nvim approach:
-- clone into `~/.config/nvim/pack/plugins/opt`
+**nvim package manager:**
+```lua
+vim.pack.add({
+  { src = "https://github.com/Stianlyng/neoranger.nvim.git" },
+})
 
+require('neoranger').setup()
+```
+
+**Manual:**
+
+Auto-load:
+```bash
+git clone https://github.com/Stianlyng/neoranger.nvim.git ~/.config/nvim/pack/plugins/opt/neoranger.nvim
+```
+
+Optional-load:
+```bash
+git clone https://github.com/Stianlyng/neoranger.nvim.git ~/.config/nvim/pack/plugins/opt/neoranger.nvim
+```
+
+Then add this in your `init.lua`:
 ```lua
 vim.cmd.packadd('neoranger.nvim')
 require('neoranger').setup()
 ```
 
-## Usage
+## How to use
 
-Run the command:
-```
-:HelloPlugin
+### Command
+
+`:Neoranger` opens it. That's the whole command.
+
+```vim
+:Neoranger          " current dir
+:Neoranger ~/path   " some other dir
 ```
 
-This will print "Hello from my plugin!" to the message area.
+### Keybind examples:
+
+```lua
+-- basic toggle
+vim.keymap.set("n", "<leader>fr", function()
+  require("neoranger").toggle()
+end, { desc = "Toggle Ranger" })
+
+-- open where your current file lives
+vim.keymap.set("n", "<leader>fc", function()
+  require("neoranger").toggle({ cwd = vim.fn.expand("%:p:h") })
+end, { desc = "Toggle Ranger (current file dir)" })
+```
+
+### Inside ranger
+
+- `q` or `<Esc>`: close the window
+- `l` or `<Enter>` on a file: opens it
+  - If current buffer is empty → Opens in current buffer
+  - If current buffer has content → Opens in new tab
+- Regular `q` to quit ranger without picking anything
+
+## Config
+
+Tweak it by passing options to `setup()`:
+
+```lua
+require("neoranger").setup({
+  width = 0.8,          -- percentage of screen
+  height = 0.8,
+  border = "rounded",   -- "rounded", "single", "double", "solid", "shadow"
+  ranger_cmd = "ranger",
+})
+```
+
+**Defaults:**
+```lua
+{
+  width = 0.8,
+  height = 0.8,
+  border = "rounded",
+  ranger_cmd = "ranger",
+  choosefile_path = "/tmp/ranger_file_path",
+  servername_path = "/tmp/nvim_servername",
+}
+```
