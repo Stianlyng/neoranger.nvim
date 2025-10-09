@@ -9,6 +9,9 @@ Ranger in a floating window.
 - todo; change working directory
 - No dependencies
 
+# todo
+- [ ] 
+
 ## Requirements
 
 - Neovim 0.12 Nightly (only tested there, might work elsewhere idk)
