@@ -15,6 +15,12 @@ M.defaults = {
 
 M.config = {}
 
+function M.cdw()
+	local dirpath = vim.fn.expand('%:p:h')
+	vim.cmd('cd ' .. vim.fn.fnameescape(dirpath))
+	print('Changed working directory to: ' .. dirpath)
+end
+
 function M.save_servername()
 	vim.fn.writefile({ vim.v.servername }, '/tmp/nvim_servername')
 	print("Servername saved: " .. vim.v.servername)
