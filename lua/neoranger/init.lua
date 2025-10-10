@@ -1,5 +1,8 @@
 local utils = require('neoranger.utils')
 
+--todo; --cmd="" allows for custom commands to ranger.
+-- ex: ranger --cmd="set preview_files false" --cmd="map E rename_append"
+
 local M = {}
 local state = { win = nil, buf = nil }
 
@@ -100,16 +103,15 @@ function M.toggle(opts)
 
 	vim.cmd.startinsert()
 
-	-- Keymaps for convenience
-	vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { buffer = state.buf, noremap = true, silent = true })
-	vim.keymap.set({ "n", "t" }, "q", function()
-		if state.win and vim.api.nvim_win_is_valid(state.win) then
-			vim.api.nvim_win_close(state.win, true)
-		end
-	end, { buffer = state.buf, noremap = true, silent = true })
+	-- todo; set this as an config option. close_with_escape: true. nb: it breaks using
+	--       esc to go out of a command in ranger, but should be an opt for those who want..
+	--vim.keymap.set({ "n", "t" }, "<Esc>", function()
+	--	if state.win and vim.api.nvim_win_is_valid(state.win) then
+	--		vim.api.nvim_win_close(state.win, true)
+	--	end
+	--end, { buffer = state.buf, noremap = true, silent = true })
 end
 
---- Setup the plugin with user configuration
 ---@param opts? table User configuration options
 function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", M.defaults, opts or {})
