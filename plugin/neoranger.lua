@@ -1,8 +1,6 @@
--- Auto-load the plugin
-if vim.fn.has('nvim-0.7.0') == 0 then
-  vim.api.nvim_err_writeln('neoranger requires Neovim >= 0.7.0')
-  return
+if vim.fn.has('nvim-0.11.0') == 0 then
+	vim.api.nvim_err_writeln('neoranger requires Neovim >= 0.7.0')
+	return
 end
 
--- Auto-setup with default options
 require('neoranger').setup()

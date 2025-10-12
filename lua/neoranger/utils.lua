@@ -1,7 +1,6 @@
 local M = {}
 
---- Check if the current buffer is empty
----@return boolean
+
 function M.is_buffer_empty()
 	if vim.fn.empty(vim.fn.expand('%')) == 1
 	    and vim.api.nvim_buf_line_count(0) == 1
@@ -12,9 +11,6 @@ function M.is_buffer_empty()
 	end
 end
 
---- Read the first line from a ranger choosefile
----@param path string Path to the choosefile
----@return string|nil First line of the file or nil if failed
 function M.read_ranger_file(path)
 	if not path or path == "" then
 		return nil
@@ -34,19 +30,18 @@ function M.read_ranger_file(path)
 	return lines[1]
 end
 
---- Debug logging function
----@param msg any Message to log (can be string or table)
 function M.log(msg)
 	local log_file = vim.fn.stdpath("cache") .. "/neoranger-debug.log"
+
 	local f = io.open(log_file, "a")
-	if not f then return end
+	if not f then return end -- Exit if file can't be opened
 
 	if type(msg) == "table" then
-		msg = vim.inspect(msg)
+		msg = vim.inspect(msg) -- Pretty-prints Lua tables
 	end
 
 	f:write(os.date("%Y-%m-%d %H:%M:%S") .. " | " .. msg .. "\n")
-	f:close()
+	f:close() -- Always close files when done
 end
 
 return M
