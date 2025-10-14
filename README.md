@@ -1,5 +1,5 @@
 
-# neoranger.nvim
+# neoranger.nvim (WIP)
 
 Ranger in a floating window.
 
