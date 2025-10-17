@@ -1,4 +1,5 @@
-# neoranger.nvim
+
+# neoranger.nvim (WIP)
 
 Ranger file manager in a floating window for Neovim.
 
