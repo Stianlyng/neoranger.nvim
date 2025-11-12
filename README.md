@@ -3,6 +3,8 @@
 
 Ranger file manager in a floating window for Neovim.
 
+![Neoranger Demo](img.png)
+
 ## Features
 
 - Opens ranger in a centered floating window
