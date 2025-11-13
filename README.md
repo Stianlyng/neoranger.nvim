@@ -11,8 +11,6 @@ Ranger file manager in a floating window for Neovim.
 - Smart file opening: opens in current buffer if empty, otherwise in a new tab
 - Change working directory to current file location
 - No external dependencies (besides ranger itself)
-- Customizable window size and border style
-- Tab completion for directory paths
 
 ## Requirements
 
