@@ -1,0 +1,132 @@
+*neoranger.txt*    Ranger file manager in a floating window
+
+Author: Stian Lyng
+License: MIT
+
+==============================================================================
+CONTENTS                                                    *neoranger-contents*
+
+  1. Introduction ......................... |neoranger-introduction|
+  2. Requirements ......................... |neoranger-requirements|
+  3. Commands ............................. |neoranger-commands|
+  4. Configuration ........................ |neoranger-configuration|
+  5. API .................................. |neoranger-api|
+  6. Behavior ............................. |neoranger-behavior|
+
+==============================================================================
+1. INTRODUCTION                                         *neoranger-introduction*
+
+neoranger opens the ranger file manager in a centered floating window.
+Selecting files in ranger opens them in Neovim: the first file replaces the
+current buffer if it is empty, otherwise files open in new tabs. Multiple
+files can be selected (marked) at once.
+
+Toggling the window closed hides it while ranger keeps running; toggling
+again brings the same session back.
+
+==============================================================================
+2. REQUIREMENTS                                         *neoranger-requirements*
+
+- Neovim >= 0.11.0
+- ranger installed and on your $PATH (or set |neoranger-config-ranger_cmd|)
+
+Run `:checkhealth neoranger` to verify your setup.
+
+==============================================================================
+3. COMMANDS                                                 *neoranger-commands*
+
+:Neoranger [{dir}]                                                  *:Neoranger*
+    Toggle the floating ranger window. With {dir}, open ranger in that
+    directory ("~" is expanded); if a session is already running in a
+    different directory, it is restarted in {dir}.
+
+:NeorangerFloat [{dir}]                                        *:NeorangerFloat*
+    Alias of |:Neoranger|, kept for backwards compatibility.
+
+==============================================================================
+4. CONFIGURATION                                       *neoranger-configuration*
+
+Calling `setup()` is optional; the plugin works out of the box. Pass a table
+to override defaults: >lua
+
+    require("neoranger").setup({
+      width = 0.8,
+      height = 0.8,
+      border = "rounded",
+      ranger_cmd = "ranger",
+      close_key = "<Esc>",
+      choosefile_path = nil,
+      servername_path = "/tmp/nvim_servername",
+    })
+<
+                                                        *neoranger-config-width*
+width           (number, default 0.8)
+    Window width as a fraction of the screen (0.0-1.0). The window is at
+    least 80 columns, clamped to the screen size.
+
+                                                       *neoranger-config-height*
+height          (number, default 0.8)
+    Window height as a fraction of the screen (0.0-1.0). The window is at
+    least 20 rows, clamped to the screen size.
+
+                                                       *neoranger-config-border*
+border          (string, default "rounded")
+    Border style: "rounded", "single", "double", "solid" or "shadow".
+
+                                                   *neoranger-config-ranger_cmd*
+ranger_cmd      (string|string[], default "ranger")
+    Command used to launch ranger. Use a list to pass extra arguments, e.g.
+    `{ "ranger", "--cmd=set show_hidden true" }`.
+
+                                                    *neoranger-config-close_key*
+close_key       (string|false, default "<Esc>")
+    Terminal-mode key that hides the floating window (ranger keeps running).
+    Set to `false` to disable, e.g. if you use Esc inside ranger's console.
+
+                                              *neoranger-config-choosefile_path*
+choosefile_path (string?, default nil)
+    Path of the file ranger writes selected paths to. When nil (default), a
+    unique temporary file is used per session, so multiple Neovim instances
+    do not interfere with each other.
+
+                                              *neoranger-config-servername_path*
+servername_path (string, default "/tmp/nvim_servername")
+    Where |neoranger.save_servername()| writes |v:servername|. Note that
+    processes started from |:terminal| already receive the servername in the
+    `$NVIM` environment variable, so this is only needed for external
+    scripts started outside of Neovim.
+
+==============================================================================
+5. API                                                           *neoranger-api*
+
+toggle({opts})                                              *neoranger.toggle()*
+    Toggle the floating ranger window. {opts} may contain `cwd` (directory
+    to open ranger in) plus any configuration override: >lua
+
+        require("neoranger").toggle()
+        require("neoranger").toggle({ cwd = "/some/path" })
+<
+    `toggleFloat()` is kept as a backwards-compatible alias.
+
+cdw()                                                          *neoranger.cdw()*
+    Change Neovim's working directory to the current file's directory.
+
+save_servername()                                  *neoranger.save_servername()*
+    Write |v:servername| to `servername_path` for external scripts.
+
+setup({opts})                                                *neoranger.setup()*
+    Merge {opts} into the configuration. Optional.
+
+==============================================================================
+6. BEHAVIOR                                                 *neoranger-behavior*
+
+Inside ranger:
+- `q` quits ranger and closes the window.
+- `close_key` (default <Esc>) hides the window; ranger keeps running and
+  the next toggle returns to the same session.
+- `l` or <Enter> on a file opens it. Mark multiple files with <Space> and
+  confirm to open them all: the first file replaces the current buffer if
+  it is empty and unmodified, every other file opens in a new tab.
+- Ranger starts with the file you came from highlighted (via --selectfile).
+
+vim:tw=78:ts=8:noet:ft=help:norl:
